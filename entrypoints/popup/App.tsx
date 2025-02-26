@@ -1,35 +1,71 @@
-import { useState } from 'react';
-import reactLogo from '@/assets/react.svg';
-import wxtLogo from '/wxt.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0);
+import HardwareMocker, {
+  type HardwareMockReturn,
+} from "../../packages/hardware/mod";
+import TimeZoneMocker, {
+  type TimeZoneMockReturn,
+} from "../../packages/timezone/mod";
+import UserAgentMocker, {
+  type UserAgentMockReturn,
+} from "../../packages/user-agent/mod";
 
-  return (
-    <>
-      <div>
-        <a href="https://wxt.dev" target="_blank">
-          <img src={wxtLogo} className="logo" alt="WXT logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>WXT + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the WXT and React logos to learn more
-      </p>
-    </>
+interface Props {}
+
+interface State {
+  hardware: HardwareMockReturn | undefined;
+  timeZone: TimeZoneMockReturn | undefined;
+  userAgent: UserAgentMockReturn | undefined;
+}
+
+class App extends React.Component<Props, State> {
+  public constructor(props: Props) {
+    super(props);
+    this.state = {
+      hardware: undefined,
+      timeZone: undefined,
+      userAgent: undefined,
+    };
+  }
+
+  public componentDidMount(): void {
+    const hardware = HardwareMocker.mockRandom();
+    const timeZone = TimeZoneMocker.mockRandom();
+    const userAgent = UserAgentMocker.mockRandom();
+    this.setState({ hardware, timeZone, userAgent });
+  }
+
+  public render(): React.ReactNode {
+    return (
+      <section>
+        <MockedOutput />
+      </section>
+    );
+  }
+}
+
+function MockedOutput(): React.ReactNode {
+  const outputInJsonFormat = React.useMemo(
+    function computeOutput() {
+      const date: Date = new Date();
+      return {
+        "Date.property.getTimezoneOffset": date.getTimezoneOffset(),
+        "navigator.userAgent": navigator["userAgent"],
+        "navigator.hardwareConcurrency": navigator["hardwareConcurrency"],
+        // @ts-expect-error the 'deviceMemory' deprecated
+        "navigator.deviceMemory": navigator["deviceMemory"],
+      };
+    },
+    [
+      navigator["userAgent"],
+      navigator["hardwareConcurrency"],
+      // @ts-expect-error the 'deviceMemory' deprecated
+      navigator["deviceMemory"],
+    ]
   );
+
+  return <output>{JSON.stringify(outputInJsonFormat, null, 2)}</output>;
 }
 
 export default App;
