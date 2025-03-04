@@ -31,9 +31,9 @@ PĀSĀD works by disrupting tracking methods used by `Fingerprint.js` and other 
 
 PĀSĀD is designed to work with popular web browsers to enhance your privacy. Currently, we support the following browsers:
 
-- [Chrome](https://chrome.google.com/webstore/detail/pasad-extension)
-- [Firefox](https://addons.mozilla.org/en-US/firefox/addon/pasad-extension/)
-- [Edge](https://microsoftedge.microsoft.com/addons/detail/pasad-extension)
+- [Firefox](https://addons.mozilla.org/en-US/firefox/addon/pasad)
+- ~~[Chrome](https://chrome.google.com/webstore/detail/pasad-extension)~~
+- ~~[Edge](https://microsoftedge.microsoft.com/addons/detail/pasad-extension)~~
 
 ## License
 
